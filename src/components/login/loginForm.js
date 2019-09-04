@@ -15,6 +15,9 @@ const LoginForm = ({ handleSubmit }) => (
         ) {
           errors.email = 'Invalid email address';
         }
+        if (!values.password) {
+          errors.password = 'Falta capturar la contraseña'
+        }
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {

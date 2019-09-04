@@ -2,9 +2,9 @@ import React from 'react';
 import LoginForm from './loginForm'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
-
+import { Redirect } from 'react-router-dom'
 const LOGIN = gql`
-  mutation Login($email: String, $password: String) {
+  mutation doLogin($email: String, $password: String) {
     doLogin(email: $email, password: $password) {
       token
     }
@@ -16,10 +16,15 @@ class Login extends React.Component {
     email: '',
     password: '',
   };
-  handdleSubmit = (values, mutation) => {
+  handleSubmit = (values, mutation) => {
     this.setState({
       ...values
     }, () => mutation())
+  }
+  setToken = ({ token }) => {
+    if (token) {
+      localStorage.setItem('jwt', token)
+    }
   }
 
   render(){
@@ -31,12 +36,16 @@ class Login extends React.Component {
           {
             
             (doLogin, { data, error, login} ) => {
+              if (data) {
+                this.setToken(data.doLogin)
+                return (<Redirect to='/' />)
+              } 
               if (login) return(<p> Cargando </p>);
 
               return (
                 <div>
                   <LoginForm 
-                    handdleSubmit={(values) => this.handdleSubmit(values, doLogin)}
+                    handleSubmit={(values) => this.handleSubmit(values, doLogin)}
                   />
                   { error && <p> Erorr </p>}
                 </div>
