@@ -30,17 +30,15 @@ class Login extends React.Component {
   render(){
     return (
       <div>
-        <Mutation
-          mutation={LOGIN} variables={this.state}
-        >
+        <Mutation mutation={LOGIN} variables={this.state}>
           {
             
-            (doLogin, { data, error, login} ) => {
+            (doLogin, { data, error, loading} ) => {
               if (data) {
                 this.setToken(data.doLogin)
                 return (<Redirect to='/' />)
               } 
-              if (login) return(<p> Cargando </p>);
+              if (loading) return(<p> Cargando </p>);
 
               return (
                 <div>
